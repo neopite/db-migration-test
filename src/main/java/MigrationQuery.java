@@ -6,7 +6,7 @@ public class MigrationQuery {
             "drop COLUMN surname;";
 
     public static String addNewCarColumnMigrationUp = "ALTER TABLE \"car\"\n" +
-            "ADD COLUMN model varchar(255) not null default 'BMW';";
+            "ADD COLUMN model varchar(255) not null default 'M5';";
 
     public static String carTableMigrationDown = "ALTER TABLE \"car\"\n" +
             "drop COLUMN model;";

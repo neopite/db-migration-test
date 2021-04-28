@@ -12,16 +12,20 @@ public class CsvComparer {
         this.logFile = logFile;
     }
 
-    public void compareCsv() {
+    public boolean compareCsv() {
+        FileUtils.writeLineIntoFile('\n' +"==============================================", logFile);
         List<String> exp = FileUtils.readLines(expectedCsv);
         List<String> act = FileUtils.readLines(actualCsv);
+        int unequalRows  = 0;
+        boolean isEquals;
 
         for (int i = 0; i < exp.size(); i++) {
             if (act.size() - 1 < i) {
-
+                break;
             } else {
                 String result = diff(exp.get(i), act.get(i)).second;
                 if (!result.isEmpty()) {
+                    unequalRows++;
                     FileUtils.writeLineIntoFile("id : "+getId(exp.get(i))+ " . Difference in text : "+result + " . Expect : " +exp.get(i)+" . Actual : " + act.get(i), logFile);
                 }
             }
@@ -30,11 +34,17 @@ public class CsvComparer {
         exp.removeAll(act);
         if(exp.size() == 0) {
             FileUtils.writeLineIntoFile("All rows are equal", logFile);
-        }else FileUtils.writeLineIntoFile("Not all rows are equal", logFile);
+            isEquals = true;
+        }else {
+            FileUtils.writeLineIntoFile("Not all rows are equal", logFile);
+            isEquals = false;
+        }
 
         FileUtils.writeLineIntoFile("Total rows in expected csv : " + expSize, logFile);
         FileUtils.writeLineIntoFile("Total rows in actual csv : " + act.size(), logFile);
-        FileUtils.writeLineIntoFile("Total unequal rows : " + exp.size(), logFile);
+        FileUtils.writeLineIntoFile("Total unequal rows : " + unequalRows, logFile);
+        FileUtils.writeLineIntoFile('\n' +"==============================================", logFile);
+        return isEquals;
     }
         /*
 
